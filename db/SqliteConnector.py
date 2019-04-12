@@ -5,7 +5,7 @@ from db.Connector import Connector
 DATABASE_FILE = "tassimo.db"
 CREATE_TABLE_ALARM = "CREATE TABLE IF NOT EXISTS ALARM(" \
                      "ID INTEGER PRIMARY KEY, " \
-                     "NAME TEXT" \
+                     "NAME TEXT DEFAULT 'Alarm'," \
                      "HOUR INTEGER NOT NULL DEFAULT 0, " \
                      "MINUTE INTEGER NOT NULL DEFAULT 0);"
 FIND_ALL_TABLES = "SELECT name FROM sqlite_master WHERE type='table';"
