@@ -1,6 +1,4 @@
-import pytest
-
-from SqliteConnector import SqliteConnector
+from db.SqliteConnector import SqliteConnector
 
 
 def test_init_connection():
@@ -11,4 +9,4 @@ def test_init_connection():
     """
 
     connector = SqliteConnector()
-    assert connector.is_alarm_table_present() == True
+    assert connector.is_alarm_table_present() is True
