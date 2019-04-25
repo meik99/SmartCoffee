@@ -7,9 +7,11 @@ CREATE_TABLE_ALARM = "CREATE TABLE IF NOT EXISTS ALARM(" \
                      "ID INTEGER PRIMARY KEY, " \
                      "NAME TEXT DEFAULT 'Alarm'," \
                      "HOUR INTEGER NOT NULL DEFAULT 0, " \
-                     "MINUTE INTEGER NOT NULL DEFAULT 0);"
+                     "MINUTE INTEGER NOT NULL DEFAULT 0," \
+                     "LAST_ACTIVATED INTEGER NOT NULL DEFAULT 0);"
 FIND_ALL_TABLES = "SELECT name FROM sqlite_master WHERE type='table';"
 FIND_ALARM_TABLE = "SELECT name FROM sqlite_master WHERE type='table' AND lower(name)='alarm';"
+CLEAR_DB = "DROP TABLE IF EXISTS ALARM;"
 
 
 class SqliteConnector(Connector):
@@ -51,3 +53,10 @@ class SqliteConnector(Connector):
     def get_connection(self):
         return sqlite3.connect(DATABASE_FILE)
 
+    def clear_db(self):
+        connection = self.get_connection()
+        connection.execute(CLEAR_DB)
+        connection.commit()
+        connection.close()
+
+        self._setup_database()

@@ -5,14 +5,14 @@ class Repository:
     def find_all(self) -> list:
         pass
 
-    def update(self) -> Entity:
+    def update(self, entity) -> Entity:
         pass
 
-    def insert(self) -> Entity:
+    def insert(self, entity) -> Entity:
         pass
 
-    def delete(self):
+    def delete(self, entity) -> Entity:
         pass
 
-    def query(self) -> list:
+    def find_by_id(self, entity_id) -> Entity:
         pass
