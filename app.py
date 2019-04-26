@@ -27,15 +27,41 @@ def brew_coffee():
     )
 
 
-@app.route('/alarm', methods=["GET", "POST"])
+@app.route('/alarm', methods=["GET", "POST", "PUT", "DELETE"])
 def app_alarms():
     if request.method == "GET":
         return get_alarms()
     elif request.method == "POST":
         content = request.get_json()
         return post_alarm(content)
+    elif request.method == "PUT":
+        content = request.get_json()
+        return update_alarm(content)
+    elif request.method == "DELETE":
+        content = request.get_json()
+        return delete_alarm(content)
     else:
-        return "Invalid Content"
+        return "Invalid Request Method"
+
+
+def delete_alarm(alarm_as_dict):
+    if "id" not in alarm_as_dict:
+        return "Invalid Update Request: Entitiy id is missing"
+
+    entity = convert_dict_to_alarm(alarm_as_dict)
+    AlarmRepository().delete(entity)
+
+    return "200"
+
+
+def update_alarm(alarm_as_dict):
+    if "id" not in alarm_as_dict:
+        return "Invalid Update Request: Entitiy id is missing"
+
+    entity = convert_dict_to_alarm(alarm_as_dict)
+    entity = AlarmRepository().update(entity)
+
+    return jsonify(AlarmJSONConverter().alarm_to_json(entity))
 
 
 def get_alarms():
@@ -47,8 +73,8 @@ def get_alarms():
 
 def post_alarm(alarm_as_dict):
     alarm = convert_dict_to_alarm(alarm_as_dict)
-    AlarmRepository().insert(alarm)
-    return get_alarms()
+    alarm = AlarmRepository().insert(alarm)
+    return jsonify(AlarmJSONConverter().alarm_to_json(alarm))
 
 
 def convert_dict_to_alarm(alarm_as_dict):
@@ -60,6 +86,8 @@ def convert_dict_to_alarm(alarm_as_dict):
         entity.minute = alarm_as_dict["minute"]
     if "name" in alarm_as_dict:
         entity.name = alarm_as_dict["name"]
+    if "id" in alarm_as_dict:
+        entity.id = alarm_as_dict["id"]
 
     return entity
 
