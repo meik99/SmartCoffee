@@ -65,7 +65,10 @@ class AlarmRepository(Repository):
         connection.commit()
         connection.close()
 
-        return AlarmResultConverter().convert_cursor_result_to_alarm(result)
+        if result is not None:
+            return AlarmResultConverter().convert_cursor_result_to_alarm(result)
+        else:
+            return None
 
     def delete(self, entity):
         connection = ConnectorFactory().build_connector().get_connection()
