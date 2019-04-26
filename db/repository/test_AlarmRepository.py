@@ -24,7 +24,7 @@ def test_find_alarms():
     assert len(result) is 10
 
     for i in range(len(result)):
-        assert result[i][0] is i + 1
+        assert result[i].id is i + 1
 
 
 def test_insert_alarms():
@@ -37,7 +37,7 @@ def test_insert_alarms():
     repo.insert(alarm)
     result = repo.find_all()
     assert len(result) is 1
-    assert result[0][0] is 1
+    assert result[0].id is 1
 
 
 def test_find_by_id():
@@ -51,10 +51,10 @@ def test_find_by_id():
     result = repo.find_all()
 
     assert len(result) is 1
-    assert result[0][0] is 1
+    assert result[0].id is 1
 
-    alarm = repo.find_by_id(result[0][0])
-    assert alarm[0] is result[0][0]
+    alarm = repo.find_by_id(result[0].id)
+    assert alarm.id is result[0].id
 
 
 def test_update():
@@ -71,18 +71,34 @@ def test_update():
     assert len(result) is 10
 
     for i in range(len(result)):
-        assert result[i][0] is i + 1
-        repo.update(Alarm(
-                id=i + 1,
-                name=result[i][1],
-                hour=result[i][2] + 1,
-                minute=result[i][3],
-                last_activated=result[i][3]
-            ))
+        assert result[i].id is i + 1
+        result[i].hour = result[i].hour + 1
+        repo.update(result[i])
 
     result = repo.find_all()
     assert len(result) is 10
 
     for i in range(len(result)):
-        assert result[i][0] is i + 1
-        assert result[i][2] is i+2
+        assert result[i].id is i + 1
+        assert result[i].hour is i+2
+
+
+def test_delete():
+    repo = AlarmRepository()
+
+    for i in range(10):
+        repo.update(Alarm(
+            name="Alarm {}".format(i),
+            hour=i + 1,
+            minute=i
+        ))
+
+    result = repo.find_all()
+    assert len(result) is 10
+
+    for i in range(len(result)):
+        assert result[i].id is i + 1
+        repo.delete(result[i])
+
+    result = repo.find_all()
+    assert len(result) is 0
