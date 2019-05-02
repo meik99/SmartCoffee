@@ -1,6 +1,6 @@
 # Replace libraries by fake ones
 import sys
-import fake_rpi
+# import fake_rpi
 
 from flask import Flask, request
 from flask import jsonify
@@ -10,6 +10,7 @@ from endpoint.AlarmEndpoint import AlarmEndpoint
 
 app = Flask(__name__)
 
+TESTING = False
 
 @app.route('/')
 def hello_world():
@@ -18,8 +19,9 @@ def hello_world():
 
 @app.route('/coffee', methods=["BREW", "POST"])
 def brew_coffee():
-    from Tassimo import Tassimo
-    Tassimo().make_coffee()
+    if TESTING is False:
+        from Tassimo import Tassimo
+        Tassimo().make_coffee()
 
     return jsonify(
         message="Brewing coffee"
@@ -46,10 +48,11 @@ def app_alarms():
 
 
 if __name__ == '__main__':
-    sys.modules['RPi'] = fake_rpi.RPi  # Fake RPi (GPIO)
-    sys.modules['smbus'] = fake_rpi.smbus  # Fake smbus (I2C)
+    # if TESTING is True:
+    #     sys.modules['RPi'] = fake_rpi.RPi  # Fake RPi (GPIO)
+    #     sys.modules['smbus'] = fake_rpi.smbus  # Fake smbus (I2C)
 
-    alarm_thread = AlarmThread(testing=True)
+    alarm_thread = AlarmThread(testing=TESTING)
     alarm_thread.setDaemon(True)
     alarm_thread.start()
 
