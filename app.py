@@ -41,7 +41,7 @@ def app_alarms():
         content = request.get_json()
         return endpoint.update_alarm(content)
     elif request.method == "DELETE":
-        content = request.get_json()
+        content = request.args.get("id", default=-1, type=int)
         return endpoint.delete_alarm(content)
     else:
         return "Invalid Request Method"

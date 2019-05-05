@@ -6,11 +6,11 @@ from db.repository.AlarmRepository import AlarmRepository
 
 
 class AlarmEndpoint:
-    def delete_alarm(self, alarm_as_dict):
-        if "id" not in alarm_as_dict:
+    def delete_alarm(self, id):
+        if "id" is None:
             return "Invalid Update Request: Entitiy id is missing"
 
-        entity = self.convert_dict_to_alarm(alarm_as_dict)
+        entity = AlarmRepository().find_by_id(id)
         AlarmRepository().delete(entity)
 
         return "200"
